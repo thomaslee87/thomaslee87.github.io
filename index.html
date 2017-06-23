@@ -313,6 +313,168 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/23/deploy-fabric-on-mac/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="thomaslee">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="菜鸟的自由天空">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/06/23/deploy-fabric-on-mac/" itemprop="url">在mac上部署HyperLedger Fabric 1.0</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-23T15:52:01+08:00">
+                2017-06-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/区块链技术/" itemprop="url" rel="index">
+                    <span itemprop="name">区块链技术</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近在学习区块链框架<a href="https://www.hyperledger.org/projects/fabric" target="_blank" rel="external">HyperLedger Fabric</a>，其当前的最新版本为1.0.0 Beta。为方便体验，需要在本地的mac上先部署起来。由于目前相关的中文资料很少，主要参考的是<a href="http://hyperledger-fabric.readthedocs.io/en/latest/" target="_blank" rel="external">官方文档</a>，还有网上一些零星的文章。</p>
+<hr>
+<p>先将Fabric工程下载一份到本地（这里为方便说明，存在个人目录）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd ~</div><div class="line">git clone git@github.com:hyperledger/fabric.git</div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><blockquote>
+<p>为了方便部署，Fabric提供了Docker镜像，但我们得先将Docker环境搭建起来。Mac上搭建Docker环境，可以通过<a href="https://www.docker.com/products/docker-toolbox" target="_blank" rel="external">Docker ToolBox</a>来安装，其中会包括一些列的工具，感兴趣的朋友可以关注下其<a href="https://docs.docker.com/toolbox/overview/#whats-in-the-box" target="_blank" rel="external">文档</a>。由于是初学，我准备不使用该工具，而是从基础开始一步步来搭建。</p>
+</blockquote>
+<h3 id="安装VirtualBox、Vagrant"><a href="#安装VirtualBox、Vagrant" class="headerlink" title="安装VirtualBox、Vagrant"></a>安装VirtualBox、Vagrant</h3><p>由于Docker是基于Linux容器技术LXC， 不能直接部署在mac的OS X系统上，因此在mac上需要先搭建一个Linux的虚拟环境。</p>
+<ul>
+<li><p>这就要借助VirtualBox虚拟出一个Linux环境，<a href="https://www.virtualbox.org/wiki/Downloads" target="_blank" rel="external">下载VirtualBox</a>OS X版本并安装即可。</p>
+</li>
+<li><p>Vagrant是虚拟机管理工具，底层支持VirtualBox作为虚拟机系统，可以在<a href="http://blog.csdn.net/wangjianno2/article/details/53728883" target="_blank" rel="external">参考这里</a>做些了解。<a href="https://www.vagrantup.com/downloads.html" target="_blank" rel="external">下载Vagrant</a>的OS X版本安装即可。</p>
+</li>
+</ul>
+<blockquote>
+<p>还有个工具<a href="https://github.com/boot2docker/boot2docker#installation" target="_blank" rel="external">boot2docker</a>可以更方便的直接mac下用命令管理docker（当然前提也得安装VirtualBox），感兴趣可以关注下，这里我也没有安装这个工具，而是进入到VirtualBox中使用docker。</p>
+</blockquote>
+<h3 id="启动虚拟机"><a href="#启动虚拟机" class="headerlink" title="启动虚拟机"></a>启动虚拟机</h3><p><br>进入<code>git clone</code>到本地个人目录的fabric工程下<code>devenv</code>目录，会看到有个<code>Vagrantfile</code>文件，在该目录下执行以下命令。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cd fabric/devenv</div><div class="line">vagrant up</div><div class="line">vagrant ssh</div></pre></td></tr></table></figure></p>
+<pre><code>其中`vagrant up`命令执行时间会很长，它会现在ubuntu虚拟机，将其启动后进行初始化环境，包括go、docker等安装，需要耐心等待。
+</code></pre><p>执行成功就会看到以下信息:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">➜  devenv git:(v1.0.0-preview) vagrant ssh                  </div><div class="line"></div><div class="line">Welcome to Ubuntu 16.04.1 LTS (GNU/Linux 4.4.0-59-generic x86_64)</div><div class="line"></div><div class="line"> * Documentation:  https://help.ubuntu.com</div><div class="line"> * Management:     https://landscape.canonical.com</div><div class="line"> * Support:        https://ubuntu.com/advantage</div><div class="line"></div><div class="line">0 packages can be updated.</div><div class="line">0 updates are security updates.</div><div class="line"></div><div class="line"></div><div class="line">Last login: Thu Jun 22 05:15:17 2017 from 10.0.2.2</div><div class="line">vagrant@hyperledger-devenv:v0.3.0-c7b3fe0:/opt/gopath/src/github.com/hyperledger/fabric$</div></pre></td></tr></table></figure></p>
+<hr>
+<h2 id="Fabric部署"><a href="#Fabric部署" class="headerlink" title="Fabric部署"></a>Fabric部署</h2><p>由于在部署过程中需要下载大量fabric相关的docker镜像，国外镜像源是在没法忍，一定要先将源切换到国内，阿里云上有：</p>
+<p>在虚拟机内部：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">sudo cp -n /lib/systemd/system/docker.service /etc/systemd/system/docker.service</div><div class="line">sudo sed -i &quot;s|ExecStart=/usr/bin/dockerd|ExecStart=/usr/bin/dockerd --registry-mirror=https://pee6w651.mirror.aliyuncs.com|g&quot; /etc/systemd/system/docker.service</div><div class="line">sudo systemctl daemon-reload</div><div class="line">sudo service docker restart</div></pre></td></tr></table></figure></p>
+<p>然后执行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">cd ~</div><div class="line">mkdir fabric-sample</div><div class="line">cd fabric-sample</div><div class="line">sh /opt/gopath/src/github.com/hyperledger/fabric/scripts/bootstrap-1.0.0-beta.sh</div></pre></td></tr></table></figure></p>
+<p>执行后会下载fabric相关的docker镜像，非一般的速度，也需要耐心等待。</p>
+<hr>
+<blockquote>
+<p>由于在虚拟机启动的时候，已经自动帮我们做了很多初始化工作，比如go、docker、java、node等很多依赖的安装与初始化，对于其启动细节还不够了解，因此在下一篇文章中，我们会介绍在一台CentOS上如何部署Fabric。</p>
+</blockquote>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/13/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -469,14 +631,32 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-count">2</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
           
 
           
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
 
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
           
 
         </nav>

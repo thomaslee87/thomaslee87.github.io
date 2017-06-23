@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[在mac上部署HyperLedger Fabric 1.0]]></title>
+    <url>%2F2017%2F06%2F23%2Fdeploy-fabric-on-mac%2F</url>
+    <content type="text"><![CDATA[最近在学习区块链框架HyperLedger Fabric，其当前的最新版本为1.0.0 Beta。为方便体验，需要在本地的mac上先部署起来。由于目前相关的中文资料很少，主要参考的是官方文档，还有网上一些零星的文章。 先将Fabric工程下载一份到本地（这里为方便说明，存在个人目录）12cd ~git clone git@github.com:hyperledger/fabric.git 环境搭建 为了方便部署，Fabric提供了Docker镜像，但我们得先将Docker环境搭建起来。Mac上搭建Docker环境，可以通过Docker ToolBox来安装，其中会包括一些列的工具，感兴趣的朋友可以关注下其文档。由于是初学，我准备不使用该工具，而是从基础开始一步步来搭建。 安装VirtualBox、Vagrant由于Docker是基于Linux容器技术LXC， 不能直接部署在mac的OS X系统上，因此在mac上需要先搭建一个Linux的虚拟环境。 这就要借助VirtualBox虚拟出一个Linux环境，下载VirtualBoxOS X版本并安装即可。 Vagrant是虚拟机管理工具，底层支持VirtualBox作为虚拟机系统，可以在参考这里做些了解。下载Vagrant的OS X版本安装即可。 还有个工具boot2docker可以更方便的直接mac下用命令管理docker（当然前提也得安装VirtualBox），感兴趣可以关注下，这里我也没有安装这个工具，而是进入到VirtualBox中使用docker。 启动虚拟机进入git clone到本地个人目录的fabric工程下devenv目录，会看到有个Vagrantfile文件，在该目录下执行以下命令。123cd fabric/devenvvagrant upvagrant ssh 其中`vagrant up`命令执行时间会很长，它会现在ubuntu虚拟机，将其启动后进行初始化环境，包括go、docker等安装，需要耐心等待。 执行成功就会看到以下信息:1234567891011121314➜ devenv git:(v1.0.0-preview) vagrant ssh Welcome to Ubuntu 16.04.1 LTS (GNU/Linux 4.4.0-59-generic x86_64) * Documentation: https://help.ubuntu.com * Management: https://landscape.canonical.com * Support: https://ubuntu.com/advantage0 packages can be updated.0 updates are security updates.Last login: Thu Jun 22 05:15:17 2017 from 10.0.2.2vagrant@hyperledger-devenv:v0.3.0-c7b3fe0:/opt/gopath/src/github.com/hyperledger/fabric$ Fabric部署由于在部署过程中需要下载大量fabric相关的docker镜像，国外镜像源是在没法忍，一定要先将源切换到国内，阿里云上有： 在虚拟机内部：1234sudo cp -n /lib/systemd/system/docker.service /etc/systemd/system/docker.servicesudo sed -i &quot;s|ExecStart=/usr/bin/dockerd|ExecStart=/usr/bin/dockerd --registry-mirror=https://pee6w651.mirror.aliyuncs.com|g&quot; /etc/systemd/system/docker.servicesudo systemctl daemon-reloadsudo service docker restart 然后执行：1234cd ~mkdir fabric-samplecd fabric-samplesh /opt/gopath/src/github.com/hyperledger/fabric/scripts/bootstrap-1.0.0-beta.sh 执行后会下载fabric相关的docker镜像，非一般的速度，也需要耐心等待。 由于在虚拟机启动的时候，已经自动帮我们做了很多初始化工作，比如go、docker、java、node等很多依赖的安装与初始化，对于其启动细节还不够了解，因此在下一篇文章中，我们会介绍在一台CentOS上如何部署Fabric。]]></content>
+      <categories>
+        <category>区块链技术</category>
+      </categories>
+      <tags>
+        <tag>区块链</tag>
+        <tag>fabric</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Hello World]]></title>
     <url>%2F2017%2F05%2F13%2Fhello-world%2F</url>
     <content type="text"><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new "My New Post" More info: Writing Run server1$ hexo server More info: Server Generate static files1$ hexo generate More info: Generating Deploy to remote sites1$ hexo deploy More info: Deployment]]></content>
